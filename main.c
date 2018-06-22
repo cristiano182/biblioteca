@@ -16,7 +16,7 @@ struct ModeloLivro {
 	char autor[30];
 	char genero[30];
 	int status;
-	struct modeloData data_emprestimo;
+	struct modeloData data_emprestimo, data_devolver;
 	int codigo_usuario;
 };
 
@@ -58,7 +58,7 @@ int main()
 
 		case 1:
 
-			inserirLivro(&cadastrarLivro, &contador_livro);
+			inserirLivro(cadastrarLivro, &contador_livro);
 			contador_livro++;
 			system("pause");
 			system("cls");
@@ -66,7 +66,7 @@ int main()
 
 
 		case 2:
-			inserirUsuario(&cadastrarUsuario, &contador_usuario);
+			inserirUsuario(cadastrarUsuario, &contador_usuario);
 			contador_usuario++;
 			system("pause");
 			system("cls");
@@ -80,7 +80,7 @@ int main()
 			break;
 
 		case 4:
-			listarUsuarios(cadastrarUsuario, &contador_usuario);
+			listarUsuarios(cadastrarUsuario, &contador_usuario, cadastrarLivro, &contador_livro);
 			system("pause");
 			system("cls");
 
@@ -94,14 +94,14 @@ int main()
 			break;
 
 		case 6:
-			emprestarLivro(&cadastrarLivro, &contador_livro, &cadastrarUsuario, &contador_usuario);
+			emprestarLivro(cadastrarLivro, &contador_livro, cadastrarUsuario, &contador_usuario);
 			system("pause");
 			system("cls");
 			break;
 
 
 		case 7:
-			devolverLivro(&cadastrarLivro, &contador_livro, &cadastrarUsuario, &contador_usuario);
+			devolverLivro(cadastrarLivro, &contador_livro, cadastrarUsuario, &contador_usuario);
 			system("pause");
 			system("cls");
 			break;
@@ -121,18 +121,19 @@ int main()
 	return 0;
 }
 
-void inserirLivro(struct ModeloLivro *cadastroLivro, int *contador_livro)
+void inserirLivro(struct ModeloLivro cadastroLivro[], int *contador_livro)
 {
 	int codigo;
 	int avanca = 1;
+	int i;
 
 	printf("INSIRA O CODIGO DO LIVRO.\n");
 	scanf("%d", &codigo);
 
-	for (int i = 0; i < *contador_livro; i++)
+	for (i = 0; i < *contador_livro; i++)
 	{
 
-		if ((cadastroLivro + i)->codigo_livro = codigo)
+		if (cadastroLivro[i].codigo_livro == codigo)
 		{
 			printf("JA EXISTE UM LIVRO CADASTRADO COM ESTE CODIGO ESCOLHA OUTRO.\n");
 			avanca = 0;
@@ -147,44 +148,68 @@ void inserirLivro(struct ModeloLivro *cadastroLivro, int *contador_livro)
 
 	if (avanca == 1)
 	{
-		(cadastroLivro + *contador_livro)->codigo_livro = codigo;
+		cadastroLivro[*contador_livro].codigo_livro = codigo;
 
 		fflush(stdin);
 		printf("INSIRA O NOME DA OBRA.\n");
-		gets((cadastroLivro + *contador_livro)->nome_da_obra);
+		gets(cadastroLivro[*contador_livro].nome_da_obra);
 
 
 		fflush(stdin);
 		printf("INSIRA O AUTOR.\n");
-		gets((cadastroLivro + *contador_livro)->autor);
+		gets(cadastroLivro[*contador_livro].autor);
 
 
 		fflush(stdin);
 		printf("INSIRA O GENERO.\n");
-		gets((cadastroLivro + *contador_livro)->genero);
+		gets(cadastroLivro[*contador_livro].genero);
 
 
 		do
 		{
 			printf("INSIRA O STATUS DO LIVRO.  1 PARA DISPONIVEL OU 0 PARA INDISPONIVEL.\n");
-			scanf("%d", &(cadastroLivro + *contador_livro)->status);
-		} while ((cadastroLivro + *contador_livro)->status != 0 && (cadastroLivro + *contador_livro)->status != 1);
+			scanf("%d", &cadastroLivro[*contador_livro].status);
+		} 
+		while (cadastroLivro[*contador_livro].status != 0 && cadastroLivro[*contador_livro].status != 1);
+
+
+		do
+		{
+			printf("INSIRA A DATA DE INSERÇÃO DO LIVRO NA BIBLIOTECA NO FORMATO DIA MES E ANO , SEPARADO POR ESPACO.\n");
+			scanf("%d %d %d", &cadastroLivro[*contador_livro].data_emprestimo.dia, &cadastroLivro[*contador_livro].data_emprestimo.mes, &cadastroLivro[*contador_livro].data_emprestimo.ano);
+		} 
+		while ((cadastroLivro[*contador_livro].data_emprestimo.dia > 30 || cadastroLivro[*contador_livro].data_emprestimo.dia < 1) || (cadastroLivro[*contador_livro].data_emprestimo.mes > 12 || cadastroLivro[*contador_livro].data_emprestimo.mes < 1));
 
 
 
-		printf("INSIRA A DATA DO EMPRESTIMO NO FORMATO DIA MES E ANO , SEPARADO POR ESPACO.\n");
-		scanf("%d %d %d", &(cadastroLivro + *contador_livro)->data_emprestimo.dia, &(cadastroLivro + *contador_livro)->data_emprestimo.mes, &(cadastroLivro + *contador_livro)->data_emprestimo.ano);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 		//CODIGO DO USUARIO
-		(cadastroLivro + *contador_livro)->codigo_usuario = 0;
+		cadastroLivro[*contador_livro].codigo_usuario = 0;
 		printf("\n\nLIVRO INSERIDO COM SUCESSO.\n");
 
 	}
 
 
 }
-void inserirUsuario(struct ModeloUsuario *cadastroUsuario, int*contador_usuario)
+void inserirUsuario(struct ModeloUsuario cadastroUsuario[], int *contador_usuario)
 {
 	int codigo;
 	int avanca = 1;
@@ -193,7 +218,7 @@ void inserirUsuario(struct ModeloUsuario *cadastroUsuario, int*contador_usuario)
 
 	for (int i = 0; i < *contador_usuario; i++)
 	{
-		if ((cadastroUsuario + i)->codigo_user == codigo)
+		if (cadastroUsuario[i].codigo_user == codigo)
 		{
 			printf("JA EXISTE UM USUARIO CADASTRADO COM ESTE CODIGO ESCOLHA OUTRO.\n");
 			avanca = 0;
@@ -208,26 +233,39 @@ void inserirUsuario(struct ModeloUsuario *cadastroUsuario, int*contador_usuario)
 
 	if (avanca == 1)
 	{
-		(cadastroUsuario + *contador_usuario)->codigo_user = codigo;
+		cadastroUsuario[*contador_usuario].codigo_user = codigo;
 
 		fflush(stdin);
 		printf("INSIRA O NOME DO USUARIO.\n");
-		gets((cadastroUsuario + *contador_usuario)->nome_usuario);
+		gets(cadastroUsuario[*contador_usuario].nome_usuario);
 
 
 		fflush(stdin);
 		printf("INSIRA O ENDERECO DO USUARIO.\n");
-		gets((cadastroUsuario + *contador_usuario)->endereco_usuario);
+		gets(cadastroUsuario[*contador_usuario].endereco_usuario);
 
 
 
 		fflush(stdin);
 		printf("INSIRA O TELEFONE DO USUARIO.\n");
-		gets((cadastroUsuario + *contador_usuario)->telefone_usuario);
+		gets(cadastroUsuario[*contador_usuario].telefone_usuario);
 
 
-		printf("INSIRA A DATA DE NASCIMENTO NO FORMATO: DIA  MES  ANO , SEPARADOS POR ESPACO.\n");
-		scanf("%d %d %d", &(cadastroUsuario + *contador_usuario)->data_nascimento.dia, &(cadastroUsuario + *contador_usuario)->data_nascimento.mes, &(cadastroUsuario + *contador_usuario)->data_nascimento.ano);
+
+
+
+		do
+		{
+			printf("INSIRA A DATA DE NASCIMENTO NO FORMATO: DIA  MES  ANO , SEPARADOS POR ESPACO.\n");
+			scanf("%d %d %d", &cadastroUsuario[*contador_usuario].data_nascimento.dia, &cadastroUsuario[*contador_usuario].data_nascimento.mes, &cadastroUsuario[*contador_usuario].data_nascimento.ano);
+		} 
+		while ((cadastroUsuario[*contador_usuario].data_nascimento.dia > 30 || cadastroUsuario[*contador_usuario].data_nascimento.dia < 1) || (cadastroUsuario[*contador_usuario].data_nascimento.mes > 12 || cadastroUsuario[*contador_usuario].data_nascimento.mes < 1));
+
+
+
+
+
+
 
 
 		printf("USUARIO INSERIDO COM SUCESSO.\n");
@@ -251,26 +289,33 @@ void listarLivros(struct ModeloLivro listarLivro[], int *contador_livro)
 		printf("GENERO DO LIVRO: %s\n", listarLivro[i].genero);
 
 		if (listarLivro[i].status == 1)
+		{
 			printf("STATUS DO LIVRO: DISPONIVEL.\n");
+			printf("DATA DE INSERCAO DO LIVRO NA BIBLIOTECA: %d/%d/%d \n", listarLivro[i].data_emprestimo.dia, listarLivro[i].data_emprestimo.mes, listarLivro[i].data_emprestimo.ano);
+		}
 		else
+		{
 			printf("STATUS DO LIVRO: INDISPONIVEL.\n");
-
-		printf("DATA DE EMPRESTIMO DO LIVRO: %d/%d/%d \n", listarLivro[i].data_emprestimo.dia, listarLivro[i].data_emprestimo.mes, listarLivro[i].data_emprestimo.ano);
+			printf("DATA DE EMPRESTIMO DO LIVRO: %d /%d/ %d \n", listarLivro[i].data_emprestimo.dia, listarLivro[i].data_emprestimo.mes, listarLivro[i].data_emprestimo.ano);
+			printf("O LIVRO ESTARA DISPONIVEL EM: %d /%d/ %d \n", listarLivro[i].data_devolver.dia, listarLivro[i].data_devolver.mes, listarLivro[i].data_devolver.ano);
+		}
 
 
 
 		printf("CODIGO DO USUARIO: %d\n", listarLivro[i].codigo_usuario);
 		printf("-------------");
 		printf("\n");
+
+
+
 	}
 
 
 }
-void listarUsuarios(struct ModeloUsuario listarUsuario[], int *contador_usuario)
+void listarUsuarios(struct ModeloUsuario listarUsuario[], int *contador_usuario, struct ModeloLivro listarLivro[], int *contador_livro)
 {
-
+	int cont = 0, b;
 	printf("               LISTA DE USUARIOS.\n\n");
-
 	for (int i = 0; i < *contador_usuario; i++)
 	{
 
@@ -279,10 +324,21 @@ void listarUsuarios(struct ModeloUsuario listarUsuario[], int *contador_usuario)
 		printf("ENDERECO DO USUARIO: %s\n", listarUsuario[i].endereco_usuario);
 		printf("TELEFONE DO USUARIO: %s\n", listarUsuario[i].telefone_usuario);
 		printf("DATA DE NASCIMENTO DO USUARIO: %d/%d/%d \n", listarUsuario[i].data_nascimento.dia, listarUsuario[i].data_nascimento.mes, listarUsuario[i].data_nascimento.ano);
+		for (b = 0; b < *contador_livro; b++)
+		{
+			if (listarLivro[b].codigo_usuario == listarUsuario[i].codigo_user)
+				cont = cont + 1;
+		}
+
+		if (cont > 0)
+			printf("O USUARIO TEM (  %d  ) LIVROS EMPRESTADO EM SEU NOME.\n", cont);
+
+		if (cont == 0)
+			printf("O USUARIO NÃO TEM LIVROS EMPRESTADO EM SEU NOME.\n");
+
 		printf("-------------");
 		printf("\n");
 	}
-
 }
 void pesquisarLivroPorGenero(struct ModeloLivro pesquisaLivro[], int *contador_livro)
 {
@@ -292,7 +348,7 @@ void pesquisarLivroPorGenero(struct ModeloLivro pesquisaLivro[], int *contador_l
 	printf("INSIRA O GENERO, O QUAL DESEJAR REALIZAR A BUSCA.\n");
 	fflush(stdin);
 	gets(genero);
-
+	printf("               LISTA DE LIVROS.\n\n");
 
 	for (i = 0; i < *contador_livro; i++)
 	{
@@ -300,7 +356,7 @@ void pesquisarLivroPorGenero(struct ModeloLivro pesquisaLivro[], int *contador_l
 		if (!strcmp(pesquisaLivro[i].genero, genero))
 		{
 
-			printf("               LISTA DE LIVROS.\n\n");
+
 
 			printf("CODIGO DO LIVRO: %d\n", pesquisaLivro[i].codigo_livro);
 			printf("NOME DA OBRA: %s\n", pesquisaLivro[i].nome_da_obra);
@@ -308,11 +364,15 @@ void pesquisarLivroPorGenero(struct ModeloLivro pesquisaLivro[], int *contador_l
 			printf("GENERO DO LIVRO: %s\n", pesquisaLivro[i].genero);
 
 			if (pesquisaLivro[i].status == 1)
+			{
 				printf("STATUS DO LIVRO: DISPONIVEL.\n");
+				printf("DATA DE INSERCAO DO LIVRO NA BIBLIOTECA: %d / %d / %d \n", pesquisaLivro[i].data_emprestimo.dia, pesquisaLivro[i].data_emprestimo.mes, pesquisaLivro[i].data_emprestimo.ano);
+			}
 			else
+			{
 				printf("STATUS DO LIVRO: INDISPONIVEL.\n");
-
-			printf("DATA DE EMPRESTIMO DO LIVRO: %d / %d / %d \n", pesquisaLivro[i].data_emprestimo.dia, pesquisaLivro[i].data_emprestimo.mes, pesquisaLivro[i].data_emprestimo.ano);
+				printf("O LIVRO ESTARA DISPONIVEL EM: %d / %d / %d \n", pesquisaLivro[i].data_devolver.dia, pesquisaLivro[i].data_devolver.mes, pesquisaLivro[i].data_devolver.ano);
+			}
 			printf("CODIGO DO USUARIO: %d\n", pesquisaLivro[i].codigo_usuario);
 			printf("-------------");
 			printf("\n");
@@ -327,7 +387,7 @@ void pesquisarLivroPorGenero(struct ModeloLivro pesquisaLivro[], int *contador_l
 
 
 }
-void emprestarLivro(struct ModeloLivro *emprestarLivro, int *contador_livro, struct ModeloUsuario *Usuarios, int *contador_usuario)
+void emprestarLivro(struct ModeloLivro emprestarLivro[], int *contador_livro, struct ModeloUsuario Usuarios[], int *contador_usuario)
 {
 	int codigo = 0, contador = 0, retorno = 0;
 
@@ -335,23 +395,41 @@ void emprestarLivro(struct ModeloLivro *emprestarLivro, int *contador_livro, str
 	scanf("%d", &codigo);
 	for (int i = 0; i < *contador_livro; i++)
 	{
-		if ((emprestarLivro + i)->codigo_livro == codigo)
+		if (emprestarLivro[i].codigo_livro == codigo)
 		{
 
-			if ((emprestarLivro + i)->status == 1)
+			if (emprestarLivro[i].status == 1)
 			{
 
 				retorno = verificaUsuario(Usuarios, contador_usuario);
 
 				if (retorno >= 0)
 				{
-					(emprestarLivro + i)->status = 0;
+					emprestarLivro[i].status = 0;
 
-					fflush(stdin);
-					printf("INSIRA A DATA DO EMPRESTIMO DO LIVRO.\n");
-					scanf("%d %d %d", &(emprestarLivro + i)->data_emprestimo.dia, &(emprestarLivro + i)->data_emprestimo.mes, &(emprestarLivro + i)->data_emprestimo.ano);
 
-					(emprestarLivro + i)->codigo_usuario = retorno;
+					do
+					{
+						printf("INSIRA A DATA DO EMPRESTIMO DO LIVRO.\n");
+						scanf("%d %d %d", &emprestarLivro[i].data_emprestimo.dia, &emprestarLivro[i].data_emprestimo.mes, &emprestarLivro[i].data_emprestimo.ano);
+					} while ((emprestarLivro[i].data_emprestimo.dia > 30 || emprestarLivro[i].data_emprestimo.dia < 1) || (emprestarLivro[i].data_emprestimo.mes > 12 || emprestarLivro[i].data_emprestimo.mes < 1));
+
+
+					if (emprestarLivro[i].data_emprestimo.dia >= 24)
+					{
+						emprestarLivro[i].data_devolver.dia = (emprestarLivro[i].data_emprestimo.dia - 30) + 7;
+					}
+					else
+					{
+						emprestarLivro[i].data_devolver.dia = emprestarLivro[i].data_emprestimo.dia + 7;
+					}
+
+					emprestarLivro[i].data_devolver.mes = emprestarLivro[i].data_emprestimo.mes;
+					emprestarLivro[i].data_devolver.ano = emprestarLivro[i].data_emprestimo.ano;
+
+
+
+					emprestarLivro[i].codigo_usuario = retorno;
 					printf("EMPRESTIMO REALIZADO COM SUCESSO.\n");
 					break;
 				}
@@ -384,7 +462,7 @@ void emprestarLivro(struct ModeloLivro *emprestarLivro, int *contador_livro, str
 
 
 }
-void devolverLivro(struct ModeloLivro *emprestarLivro, int *contador_livro, struct ModeloUsuario *Usuarios, int *contador_usuario)
+void devolverLivro(struct ModeloLivro emprestarLivro[], int *contador_livro, struct ModeloUsuario Usuarios[], int *contador_usuario)
 {
 	int codigo_livro, contador = 0, retorno = 0, i;
 	int avanca = 0;
@@ -392,72 +470,64 @@ void devolverLivro(struct ModeloLivro *emprestarLivro, int *contador_livro, stru
 	printf("INSIRA O CODIGO DO LIVRO QUE DESEJA DEVOLVER.\n");
 	scanf("%d", &codigo_livro);
 
+
 	for (i = 0; i < *contador_livro; i++)
 	{
-		if ((emprestarLivro + i)->codigo_livro == codigo_livro)
+		if (emprestarLivro[i].codigo_livro == codigo_livro)
 			avanca = 1;
 
 		else
 		{
-			avanca = 2;
+			contador++;
 		}
+
 	}
 
-	if (avanca == 1)
+
+	if (contador == *contador_livro)
 	{
-		avanca = 0;
-		retorno = verificaUsuario(Usuarios, contador_usuario);
-
-		if (retorno >= 0)
-			avanca = 1;
+		printf("O CODIGO DO LIVRO INFORMANDO NAO EXISTE.\n");
 
 	}
+
+
 
 	if (avanca == 1)
 	{
 		for (i = 0; i < *contador_livro; i++)
 		{
-			if ((emprestarLivro + i)->codigo_livro == codigo_livro && (emprestarLivro + i)->codigo_usuario == retorno)
+			if (emprestarLivro[i].codigo_livro == codigo_livro)
 			{
 
-				(emprestarLivro + i)->codigo_usuario = 0;
-				(emprestarLivro + i)->status = 1;
+
+				if (emprestarLivro[i].status == 1)
+				{
+					printf("VOCE NAO PODE DEVOLVER UM LIVRO QUE NAO ESTA EMPRESTADO.\n");
+					break;
+				}
+
+				else
+				{
+					emprestarLivro[i].codigo_usuario = 0;
+					emprestarLivro[i].status = 1;
+
+					do 
+					{
+						printf("INSIRA A DATA DE DEVOLUCAO NO FORMATO DIA MES E ANO , SEPARADO POR ESPACO.\n");
+						scanf("%d %d %d", &emprestarLivro[i].data_emprestimo.dia, &emprestarLivro[i].data_emprestimo.mes, &emprestarLivro[i].data_emprestimo.ano);
+					} while (emprestarLivro[i].data_emprestimo.dia > 30 || emprestarLivro[i].data_emprestimo.dia < 1 || emprestarLivro[i].data_emprestimo.mes > 12 || emprestarLivro[i].data_emprestimo.mes < 1);
+					printf("DEVOLUCAO REALIZADA COM SUCESSO.\n");
+					break;
+				}
 
 
 
-				printf("INSIRA A DATA DE DEVOLUCAO NO FORMATO DIA MES E ANO , SEPARADO POR ESPACO.\n");
-				scanf("%d %d %d", &(emprestarLivro)->data_emprestimo.dia, &(emprestarLivro)->data_emprestimo.mes, &(emprestarLivro)->data_emprestimo.ano);
 
 
-
-				printf("DEVOLUCAO REALIZADA COM SUCESSO.\n");
-				break;
 			}
-
-
-
-			else
-			{
-				contador++;
-			}
-
 
 		}
-
-		if (contador == *contador_livro)
-			printf("O USUARIO INFORMADO NAO PEGOU ESTE LIVRO EMPRESTADO.\n");
-
 	}
-
-	if (*contador_livro == 0)
-		avanca = 2;
-
-	if (avanca == 0)
-		printf("O USUARIO INFORMANDO NAO EXISTE.\n");
-
-	if (avanca == 2)
-		printf("O CODIGO DO LIVRO INFORMANDO NAO EXISTE.\n");
-
 
 
 
@@ -502,6 +572,9 @@ int verificaUsuario(struct ModeloUsuario Usuarios[], int *contador_usuario)
 
 
 		if (Usuarios[i].codigo_user == codigo)
+
+
+
 		{
 			retorno = codigo;
 
