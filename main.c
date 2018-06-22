@@ -181,26 +181,6 @@ void inserirLivro(struct ModeloLivro cadastroLivro[], int *contador_livro)
 		while ((cadastroLivro[*contador_livro].data_emprestimo.dia > 30 || cadastroLivro[*contador_livro].data_emprestimo.dia < 1) || (cadastroLivro[*contador_livro].data_emprestimo.mes > 12 || cadastroLivro[*contador_livro].data_emprestimo.mes < 1));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		//CODIGO DO USUARIO
 		cadastroLivro[*contador_livro].codigo_usuario = 0;
 		printf("\n\nLIVRO INSERIDO COM SUCESSO.\n");
