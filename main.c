@@ -169,7 +169,7 @@ void inserirLivro(struct ModeloLivro cadastroLivro[], int *contador_livro)
 		{
 			printf("INSIRA O STATUS DO LIVRO.  1 PARA DISPONIVEL OU 0 PARA INDISPONIVEL.\n");
 			scanf("%d", &cadastroLivro[*contador_livro].status);
-		} 
+		}
 		while (cadastroLivro[*contador_livro].status != 0 && cadastroLivro[*contador_livro].status != 1);
 
 
@@ -177,7 +177,7 @@ void inserirLivro(struct ModeloLivro cadastroLivro[], int *contador_livro)
 		{
 			printf("INSIRA A DATA DE INSERÇÃO DO LIVRO NA BIBLIOTECA NO FORMATO DIA MES E ANO , SEPARADO POR ESPACO.\n");
 			scanf("%d %d %d", &cadastroLivro[*contador_livro].data_emprestimo.dia, &cadastroLivro[*contador_livro].data_emprestimo.mes, &cadastroLivro[*contador_livro].data_emprestimo.ano);
-		} 
+		}
 		while ((cadastroLivro[*contador_livro].data_emprestimo.dia > 30 || cadastroLivro[*contador_livro].data_emprestimo.dia < 1) || (cadastroLivro[*contador_livro].data_emprestimo.mes > 12 || cadastroLivro[*contador_livro].data_emprestimo.mes < 1));
 
 
@@ -238,7 +238,7 @@ void inserirUsuario(struct ModeloUsuario cadastroUsuario[], int *contador_usuari
 		{
 			printf("INSIRA A DATA DE NASCIMENTO NO FORMATO: DIA  MES  ANO , SEPARADOS POR ESPACO.\n");
 			scanf("%d %d %d", &cadastroUsuario[*contador_usuario].data_nascimento.dia, &cadastroUsuario[*contador_usuario].data_nascimento.mes, &cadastroUsuario[*contador_usuario].data_nascimento.ano);
-		} 
+		}
 		while ((cadastroUsuario[*contador_usuario].data_nascimento.dia > 30 || cadastroUsuario[*contador_usuario].data_nascimento.dia < 1) || (cadastroUsuario[*contador_usuario].data_nascimento.mes > 12 || cadastroUsuario[*contador_usuario].data_nascimento.mes < 1));
 
 
@@ -275,9 +275,23 @@ void listarLivros(struct ModeloLivro listarLivro[], int *contador_livro)
 		}
 		else
 		{
-			printf("STATUS DO LIVRO: INDISPONIVEL.\n");
+                if(listarLivro[i].codigo_usuario == 0)
+		    {
+		        printf("STATUS DO LIVRO: INDISPONIVEL.\n");
+		        printf("UTILIZE O USUARIO ADMIM ( CODIGO 0 ) PARA  MUDAR O STATUS DO LIVRO.\n");
+
+		        printf("DATA DE INSERCAO  DO LIVRO NA BIBLIOTECA: %d /%d/ %d \n", listarLivro[i].data_emprestimo.dia, listarLivro[i].data_emprestimo.mes, listarLivro[i].data_emprestimo.ano);
+
+		    }
+		    else
+            {
+
+            printf("STATUS DO LIVRO: INDISPONIVEL.\n");
 			printf("DATA DE EMPRESTIMO DO LIVRO: %d /%d/ %d \n", listarLivro[i].data_emprestimo.dia, listarLivro[i].data_emprestimo.mes, listarLivro[i].data_emprestimo.ano);
 			printf("O LIVRO ESTARA DISPONIVEL EM: %d /%d/ %d \n", listarLivro[i].data_devolver.dia, listarLivro[i].data_devolver.mes, listarLivro[i].data_devolver.ano);
+
+            }
+
 		}
 
 
@@ -306,8 +320,10 @@ void listarUsuarios(struct ModeloUsuario listarUsuario[], int *contador_usuario,
 		printf("DATA DE NASCIMENTO DO USUARIO: %d/%d/%d \n", listarUsuario[i].data_nascimento.dia, listarUsuario[i].data_nascimento.mes, listarUsuario[i].data_nascimento.ano);
 		for (b = 0; b < *contador_livro; b++)
 		{
-			if (listarLivro[b].codigo_usuario == listarUsuario[i].codigo_user)
-				cont = cont + 1;
+			if ( listarUsuario[i].codigo_user == listarLivro[b].codigo_usuario )
+				{
+				    cont = cont + 1;
+				}
 		}
 
 		if (cont > 0)
@@ -318,6 +334,8 @@ void listarUsuarios(struct ModeloUsuario listarUsuario[], int *contador_usuario,
 
 		printf("-------------");
 		printf("\n");
+
+		cont = 0;
 	}
 }
 void pesquisarLivroPorGenero(struct ModeloLivro pesquisaLivro[], int *contador_livro)
@@ -444,7 +462,7 @@ void emprestarLivro(struct ModeloLivro emprestarLivro[], int *contador_livro, st
 }
 void devolverLivro(struct ModeloLivro emprestarLivro[], int *contador_livro, struct ModeloUsuario Usuarios[], int *contador_usuario)
 {
-	int codigo_livro, contador = 0, retorno = 0, i;
+	int codigo_livro, contador = 0, i;
 	int avanca = 0;
 
 	printf("INSIRA O CODIGO DO LIVRO QUE DESEJA DEVOLVER.\n");
@@ -491,7 +509,7 @@ void devolverLivro(struct ModeloLivro emprestarLivro[], int *contador_livro, str
 					emprestarLivro[i].codigo_usuario = 0;
 					emprestarLivro[i].status = 1;
 
-					do 
+					do
 					{
 						printf("INSIRA A DATA DE DEVOLUCAO NO FORMATO DIA MES E ANO , SEPARADO POR ESPACO.\n");
 						scanf("%d %d %d", &emprestarLivro[i].data_emprestimo.dia, &emprestarLivro[i].data_emprestimo.mes, &emprestarLivro[i].data_emprestimo.ano);
@@ -566,4 +584,3 @@ int verificaUsuario(struct ModeloUsuario Usuarios[], int *contador_usuario)
 
 	return retorno;
 }
-
