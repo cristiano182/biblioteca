@@ -1,61 +1,86 @@
-# BIBLIOTECA DE LIVROS EM LINGUAGEM C
 #include <stdio.h>
 #include <stdlib.h>
 
+void preencheMatriz();
+void matrizQntRepete();
+void imprimeMatriz();
 int main()
 {
-    int i,j,k,p;
-    int matriz[4][4];
-    int matrizQntRepete[4][4];
 
-    for(i=0; i<4; i++)
+int matriz[4][4];
+
+
+preencheMatriz(matriz);
+matrizQntRepete(matriz);
+
+
+return 0;
+
+}
+
+void preencheMatriz(int matriz[4][4])
+{
+int i,j;
+srand(time(NULL));
+for(i=0; i<4; i++)
+{
+    for(j=0; j<4; j++)
     {
-        for(j=0; j<4; j++)
-        {
-
-            matriz[i][j] = rand() % 11;
-
-        }
+        matriz[i][j] = rand() % 11;
     }
+}
 
-    for(i=0; i<4; i++)
-    {
-        for(j=0; j<4; j++)
-        {
-            printf("%d ",matriz[i][j]);
-        }
-        printf("\n");
-    }
 
-    for(k=0; k<4; k++)
+}
+
+void matrizQntRepete(int matriz[4][4])
+{
+int k,p,i,j,m;
+int matriz2[4][4];
+for(k=0; k<4; k++)
+{
+    for(p=0; p<4; p++)
     {
-        for(p=0; p<4; p++)
+         matriz2[k][p] = m;
+         m=0;
+        for(i=0; i<4; i++)
         {
-            for(i=0; i<4; i++)
+
+            for(j=0; j<4; j++)
             {
-                for(j=0; j<4; j++)
+
+                if(matriz[k][p] == matriz[i][j])
                 {
 
-                    if(matriz[i][j] == matriz[k][p])
-                    {
+                    m++;
 
-                        matrizQntRepete[k][p] += 1;
-
-                    }
                 }
             }
         }
     }
+}
 
-    printf("\n\n");
+imprimeMatriz(matriz);
 
-    for(i=0; i<4; i++)
+
+
+
+
+}
+void imprimeMatriz(int matriz[4][4])
+{
+int i,j;
+for(i=0; i<4; i++)
+{
+    for(j=0; j<4; j++)
     {
-        for(j=0; j<4; j++)
-        {
-            printf("%d ",matrizQntRepete[i][j]);
-        }
-        printf("\n");
+            printf("%d ",matriz[i][j]);
     }
-    return 0;
+    printf("\n");
+
+    }
+
+
+
+
 }
