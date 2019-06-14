@@ -1,0 +1,1 @@
+! [] (nome-de-giphy.gif)
